@@ -24,8 +24,8 @@ public class PersonServices {
         this.personRepository = personRepository;
     }
 
-    public List<PersonEntity> getAllPeopleDB(){
-        return personRepository.findAll();
+    public List<PersonEntity> getPeople(long refId, int size) {
+        return personRepository.findPeople(refId, size);
     }
 
     public PersonEntity getPersonById(Long id){
@@ -61,4 +61,16 @@ public class PersonServices {
     }
 
 
+
+    public PersonEntity updatePerson(Long id, PersonEntity person) {
+
+    PersonEntity existingPerson = personRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+
+    existingPerson.setFirstName(person.getFirstName());
+    existingPerson.setLastName(person.getLastName());
+    existingPerson.setAge(person.getAge());
+
+    return personRepository.save(existingPerson);
+}
 }
