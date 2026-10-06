@@ -2,7 +2,9 @@ package com.mathservice.services;
 
 import org.springframework.stereotype.Service;
 
-import com.mathservice.models.Person;
+import com.mathservice.entities.PersonEntity;
+import com.mathservice.models.PersonModel;
+import com.mathservice.repositories.PersonRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,12 +17,25 @@ public class PersonServices {
 
     // /mnt/personas/people.csv
     private final String csvPath = "/mnt/personas/people.csv";
+    private final PersonRepository personRepository;
+
+    
+    public PersonServices (PersonRepository personRepository){
+        this.personRepository = personRepository;
+    }
+
+    public List<PersonEntity> getAllPeopleDB(){
+        return personRepository.findAll();
+    }
+
+    public PersonEntity getPersonById(Long id){
+        return personRepository.findById(id).orElse(null);
+    }
 
 
-    public List<Person> getPeople(int refId, int size) {
+    public List<PersonModel> getPeopleNFS(int refId, int size) {
 
-        List<Person> persons = new ArrayList<>();
-
+        List<PersonModel> persons = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(csvPath))) {
 
@@ -31,19 +46,19 @@ public class PersonServices {
                 reader.readLine();
             }
 
-
             while ((line = reader.readLine()) != null && j < refId+1+size) {
 
                 String[] data = line.split(",");
-                persons.add(new Person(data[0], data[1], data[2], Integer.parseInt(data[3])));
+                persons.add(new PersonModel(data[0], data[1], data[2], Integer.parseInt(data[3])));
                 j++;
             }
             
-
         } catch (IOException e) {
             throw new RuntimeException("Error leyendo el archivo CSV", e);
         }
 
         return persons;
     }
+
+
 }
