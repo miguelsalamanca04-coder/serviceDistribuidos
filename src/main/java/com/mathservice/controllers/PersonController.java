@@ -40,7 +40,7 @@ public class PersonController {
     
     @GetMapping("/getPeopleDB")
     public PeopleResponse getAllPeople(@RequestParam int refId, @RequestParam  int size){
-        return new PeopleResponse(serverId,"Dato Quemado",personServices.getPeople(refId, size));
+        return new PeopleResponse(serverId,"Dato Quemado FECHA DE HOY",personServices.getPeople(refId, size));
     }
 
     @GetMapping("/getById")
